@@ -3,36 +3,24 @@
     <article>
       <h1 class="title">{{ post.title }}</h1>
       <p>
-        {{ post.content }}
+        {{ post.body }}
       </p>
     </article>
-    <aside>
-      <h3>Posts you might enjoy</h3>
-      <ul>
-        <li v-for="related in relatedPosts" :key="related.id">
-          <nuxt-link :to="{ name: 'posts-id', params: { id: related.id } }">
-            {{ related.title }}
-          </nuxt-link>
-        </li>
-      </ul>
-    </aside>
   </div>
 </template>
 
 <script>
 export default {
+  async asyncData({ params, $axios }) {
+    const post = await $axios.$get(
+      `https://jsonplaceholder.typicode.com/posts/${params.id}`,
+    );
+    return { post };
+  },
   data() {
     return {
       id: this.$route.params.id,
     };
-  },
-  computed: {
-    post() {
-      return this.$store.state.posts.all.find((post) => post.id === this.id);
-    },
-    relatedPosts() {
-      return this.$store.state.posts.all.filter((post) => post.id !== this.id);
-    },
   },
   head() {
     return {

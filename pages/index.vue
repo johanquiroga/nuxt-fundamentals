@@ -29,10 +29,11 @@ export default {
   components: {
     Logo,
   },
-  computed: {
-    posts() {
-      return this.$store.state.posts.all;
-    },
+  async asyncData({ $axios }) {
+    const posts = await $axios.$get(
+      'https://jsonplaceholder.typicode.com/posts',
+    );
+    return { posts };
   },
   head() {
     return {
